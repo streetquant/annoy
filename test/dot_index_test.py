@@ -65,15 +65,15 @@ class DotIndexTest(TestCase):
         # the best movie/variable name
         total_recall = 0.
 
-        for r in range(n_rounds):
-            # create random points at distance x
-            f = 10
+        # create random points at distance x
+        f = 10
+        for _ in range(n_rounds):
             idx = AnnoyIndex(f, 'dot')
 
-            data = numpy.array([
-                [random.gauss(0, 1) for z in range(f)]
-                for j in range(n_points)
-            ])
+            data = numpy.array(
+                [[random.gauss(0, 1) for _ in range(f)] for _ in range(n_points)]
+            )
+
 
             expected_results = [
                 sorted(

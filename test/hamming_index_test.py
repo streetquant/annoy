@@ -79,7 +79,7 @@ class HammingIndexTest(TestCase):
         self.assertLessEqual(max(ds), f)
 
         dists = []
-        for x in range(1000):
+        for _ in range(1000):
             rs, ds = i.get_nns_by_vector(numpy.random.binomial(1, 0.5, f), 1, search_k=1000, include_distances=True)
             dists.append(ds[0])
         avg_dist = 1.0 * sum(dists) / len(dists)

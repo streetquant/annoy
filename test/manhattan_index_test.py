@@ -57,7 +57,7 @@ class ManhattanIndexTest(TestCase):
         f = 10
         i = AnnoyIndex(f, 'manhattan')
         for j in range(0, 10000, 2):
-            p = [random.gauss(0, 1) for z in range(f)]
+            p = [random.gauss(0, 1) for _ in range(f)]
             x = [1 + pi + random.gauss(0, 1e-2) for pi in p]
             y = [1 + pi + random.gauss(0, 1e-2) for pi in p]
             i.add_item(j, x)
@@ -70,13 +70,13 @@ class ManhattanIndexTest(TestCase):
 
     def precision(self, n, n_trees=10, n_points=10000, n_rounds=10):
         found = 0
-        for r in range(n_rounds):
-            # create random points at distance x
-            f = 10
+        # create random points at distance x
+        f = 10
+        for _ in range(n_rounds):
             i = AnnoyIndex(f, 'manhattan')
             for j in range(n_points):
-                p = [random.gauss(0, 1) for z in range(f)]
-                norm = sum([pi ** 2 for pi in p]) ** 0.5
+                p = [random.gauss(0, 1) for _ in range(f)]
+                norm = sum(pi ** 2 for pi in p)**0.5
                 x = [pi / norm + j for pi in p]
                 i.add_item(j, x)
 
@@ -146,4 +146,4 @@ class ManhattanIndexTest(TestCase):
                 u = numpy.array(i.get_item_vector(a))
                 v = numpy.array(i.get_item_vector(b))
                 self.assertAlmostEqual(dist, numpy.sum(numpy.fabs(u - v)))
-                self.assertAlmostEqual(dist, sum([abs(float(x)-float(y)) for x, y in zip(u, v)]))
+                self.assertAlmostEqual(dist, sum(abs(float(x)-float(y)) for x, y in zip(u, v)))

@@ -31,7 +31,7 @@ class HolesTest(TestCase):
             js = index.get_nns_by_item(i, 10000)
             for j in js:
                 self.assertTrue(j in valid_indices)
-        for i in range(1000):
+        for _ in range(1000):
             v = numpy.random.normal(size=(f,))
             js = index.get_nns_by_vector(v, 10000)
             for j in js:
@@ -43,7 +43,7 @@ class HolesTest(TestCase):
             annoy.add_item(base_i + i, numpy.random.normal(size=(f,)))
         annoy.build(100)
         res = annoy.get_nns_by_item(base_i, n)
-        self.assertEqual(set(res), set([base_i + i for i in range(n)]))
+        self.assertEqual(set(res), {base_i + i for i in range(n)})
 
     def test_root_one_child(self):
         # See https://github.com/spotify/annoy/issues/223

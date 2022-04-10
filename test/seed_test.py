@@ -24,7 +24,7 @@ class SeedTest(TestCase):
         Y = numpy.random.rand(50, f)
 
         indexes = []
-        for i in range(2):
+        for _ in range(2):
             index = AnnoyIndex(f, 'angular')
             index.set_seed(42)
             for j in range(X.shape[0]):

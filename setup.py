@@ -64,12 +64,9 @@ if platform.system() == 'Darwin':
     extra_compile_args += ['-mmacosx-version-min=10.12']
     extra_link_args += ['-stdlib=libc++', '-mmacosx-version-min=10.12']
 
-# Manual configuration, you're on your own here.
-manual_compiler_args = os.environ.get('ANNOY_COMPILER_ARGS', None)
-if manual_compiler_args:
+if manual_compiler_args := os.environ.get('ANNOY_COMPILER_ARGS', None):
     extra_compile_args = manual_compiler_args.split(',')
-manual_linker_args = os.environ.get('ANNOY_LINKER_ARGS', None)
-if manual_linker_args:
+if manual_linker_args := os.environ.get('ANNOY_LINKER_ARGS', None):
     extra_link_args = manual_linker_args.split(',')
 
 setup(name='annoy',
