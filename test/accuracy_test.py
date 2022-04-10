@@ -28,9 +28,9 @@ from nose.plugins.attrib import attr
 
 class AccuracyTest(unittest.TestCase):
     def _get_index(self, dataset):
-        url = 'http://vectors.erikbern.com/%s.hdf5' % dataset
-        vectors_fn = os.path.join('test', dataset + '.hdf5')
-        index_fn = os.path.join('test', dataset + '.annoy')
+        url = f'http://vectors.erikbern.com/{dataset}.hdf5'
+        vectors_fn = os.path.join('test', f'{dataset}.hdf5')
+        index_fn = os.path.join('test', f'{dataset}.annoy')
 
         if not os.path.exists(vectors_fn):
             print('downloading', url, '->', vectors_fn)

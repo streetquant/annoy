@@ -33,25 +33,25 @@ class IndexTest(TestCase):
     def test_load_unload(self):
         # Issue #108
         i = AnnoyIndex(10, 'angular')
-        for x in range(100000):
+        for _ in range(100000):
             i.load('test/test.tree')
             i.unload()
 
     def test_construct_load_destruct(self):
-        for x in range(100000):
+        for _ in range(100000):
             i = AnnoyIndex(10, 'angular')
             i.load('test/test.tree')
 
     def test_construct_destruct(self):
-        for x in range(100000):
+        for _ in range(100000):
             i = AnnoyIndex(10, 'angular')
-            i.add_item(1000, [random.gauss(0, 1) for z in range(10)])
+            i.add_item(1000, [random.gauss(0, 1) for _ in range(10)])
 
     def test_save_twice(self):
         # Issue #100
         t = AnnoyIndex(10, 'angular')
         for i in range(100):
-            t.add_item(i, [random.gauss(0, 1) for z in range(10)])
+            t.add_item(i, [random.gauss(0, 1) for _ in range(10)])
         t.build(10)
         t.save('t1.ann')
         t.save('t2.ann')
@@ -83,7 +83,7 @@ class IndexTest(TestCase):
     def test_save_without_build(self):
         t = AnnoyIndex(10, 'angular')
         for i in range(100):
-            t.add_item(i, [random.gauss(0, 1) for z in range(10)])
+            t.add_item(i, [random.gauss(0, 1) for _ in range(10)])
         # Note: in earlier version, this was allowed (see eg #61)
         self.assertRaises(Exception, t.save, 'x.tree')
         
@@ -121,11 +121,11 @@ class IndexTest(TestCase):
         a.build(-1)
         self.assertEqual(a.get_n_items(), 4)
         self.assertEqual(a.get_item_vector(3), [0, 0, 1])
-        self.assertEqual(set(a.get_nns_by_item(1, 999)), set([1, 2, 3]))
+        self.assertEqual(set(a.get_nns_by_item(1, 999)), {1, 2, 3})
         a.save('something.annoy')
         self.assertEqual(a.get_n_items(), 4)
         self.assertEqual(a.get_item_vector(3), [0, 0, 1])
-        self.assertEqual(set(a.get_nns_by_item(1, 999)), set([1, 2, 3]))
+        self.assertEqual(set(a.get_nns_by_item(1, 999)), {1, 2, 3})
 
     def test_prefault(self):
         i = AnnoyIndex(10, 'angular')
@@ -144,7 +144,7 @@ class IndexTest(TestCase):
         # Build the initial index
         t = AnnoyIndex(f, 'angular')
         for i in range(1000):
-            v = [random.gauss(0, 1) for z in range(f)]
+            v = [random.gauss(0, 1) for _ in range(f)]
             t.add_item(i, v)
         t.build(10)
         t.save('test.ann')
@@ -156,7 +156,7 @@ class IndexTest(TestCase):
         # Overwrite index file
         t3 = AnnoyIndex(f, 'angular')
         for i in range(500):
-            v = [random.gauss(0, 1) for z in range(f)]
+            v = [random.gauss(0, 1) for _ in range(f)]
             t3.add_item(i, v)
         t3.build(10)
         if os.name == 'nt':
@@ -166,7 +166,7 @@ class IndexTest(TestCase):
         else:
             t3.save('test.ann')
             # Get nearest neighbors
-            v = [random.gauss(0, 1) for z in range(f)]
+            v = [random.gauss(0, 1) for _ in range(f)]
             nns = t2.get_nns_by_vector(v, 1000)  # Should not crash
 
     def test_get_n_trees(self):
@@ -181,23 +181,20 @@ class IndexTest(TestCase):
         t = AnnoyIndex(f, 'angular')
         t.verbose(True)
         for i in range(1000):
-            v = [random.gauss(0, 1) for z in range(f)]
+            v = [random.gauss(0, 1) for _ in range(f)]
             t.add_item(i, v)
         t.build(10)
 
-        if os.name == 'nt':
-            path = 'Z:\\xyz.annoy'
-        else:
-            path = '/x/y/z.annoy'
+        path = 'Z:\\xyz.annoy' if os.name == 'nt' else '/x/y/z.annoy'
         self.assertRaises(Exception, t.save, path)
 
     def test_dimension_mismatch(self):
         t = AnnoyIndex(100, 'angular')
         for i in range(1000):
-            t.add_item(i, [random.gauss(0, 1) for z in range(100)])
+            t.add_item(i, [random.gauss(0, 1) for _ in range(100)])
         t.build(10)
         t.save('test.annoy')
-        
+
         u = AnnoyIndex(200, 'angular')
         self.assertRaises(IOError, u.load, 'test.annoy')
         u = AnnoyIndex(50, 'angular')
@@ -207,19 +204,19 @@ class IndexTest(TestCase):
         # 398
         t = AnnoyIndex(100, 'angular')
         for i in range(1000):
-            t.add_item(i, [random.gauss(0, 1) for z in range(100)])
+            t.add_item(i, [random.gauss(0, 1) for _ in range(100)])
         t.build(10)
         t.save('test.annoy')
 
         # Used to segfault:
-        v = [random.gauss(0, 1) for z in range(100)]
+        v = [random.gauss(0, 1) for _ in range(100)]
         self.assertRaises(Exception, t.add_item, i, v)
 
     def test_build_twice(self):
         # 420
         t = AnnoyIndex(100, 'angular')
         for i in range(1000):
-            t.add_item(i, [random.gauss(0, 1) for z in range(100)])
+            t.add_item(i, [random.gauss(0, 1) for _ in range(100)])
         t.build(10)
         # Used to segfault:
         self.assertRaises(Exception, t.build, 10)
@@ -233,7 +230,7 @@ class IndexTest(TestCase):
         m = AnnoyIndex(3, 'angular')
         m.verbose(True)
         for i in range(100):
-            m.add_item(n_vectors+i, [random.gauss(0, 1) for z in range(f)])
+            m.add_item(n_vectors+i, [random.gauss(0, 1) for _ in range(f)])
         n_trees = 10
         m.build(n_trees)
         path = 'test_big.annoy'

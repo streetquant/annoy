@@ -82,7 +82,7 @@ class AngularIndexTest(TestCase):
         f = 10
         i = AnnoyIndex(f, 'angular')
         for j in range(0, 10000, 2):
-            p = [random.gauss(0, 1) for z in range(f)]
+            p = [random.gauss(0, 1) for _ in range(f)]
             f1 = random.random() + 1
             f2 = random.random() + 1
             x = [f1 * pi + random.gauss(0, 1e-2) for pi in p]
@@ -97,13 +97,13 @@ class AngularIndexTest(TestCase):
 
     def precision(self, n, n_trees=10, n_points=10000, n_rounds=10, search_k=100000):
         found = 0
-        for r in range(n_rounds):
-            # create random points at distance x from (1000, 0, 0, ...)
-            f = 10
+        # create random points at distance x from (1000, 0, 0, ...)
+        f = 10
+        for _ in range(n_rounds):
             i = AnnoyIndex(f, 'angular')
             for j in range(n_points):
-                p = [random.gauss(0, 1) for z in range(f - 1)]
-                norm = sum([pi ** 2 for pi in p]) ** 0.5
+                p = [random.gauss(0, 1) for _ in range(f - 1)]
+                norm = sum(pi ** 2 for pi in p)**0.5
                 x = [1000] + [pi / norm * j for pi in p]
                 i.add_item(j, x)
 
@@ -195,7 +195,9 @@ class AngularIndexTest(TestCase):
                 # cos = numpy.clip(1 - cosine(u, v), -1, 1) # scipy returns 1 - cos
                 self.assertAlmostEqual(dist ** 2, numpy.dot(u_norm - v_norm, u_norm - v_norm))
                 # self.assertAlmostEqual(dist, (2*(1 - cos))**0.5)
-                self.assertAlmostEqual(dist ** 2, sum([(x-y)**2 for x, y in zip(u_norm, v_norm)]))
+                self.assertAlmostEqual(
+                    dist ** 2, sum((x - y) ** 2 for x, y in zip(u_norm, v_norm))
+                )
 
     def test_only_one_item(self):
         # reported to annoy-user by Kireet Reddy

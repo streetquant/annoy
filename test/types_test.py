@@ -33,15 +33,21 @@ class TypesTest(TestCase):
         f = 10
         i = AnnoyIndex(f, 'euclidean')
         for j in range(n_points):
-            i.add_item(j, tuple(random.gauss(0, 1) for x in range(f)))
+            i.add_item(j, tuple(random.gauss(0, 1) for _ in range(f)))
 
         i.build(n_trees)
 
     def test_wrong_length(self, n_points=1000, n_trees=10):
         f = 10
         i = AnnoyIndex(f, 'euclidean')
-        i.add_item(0, [random.gauss(0, 1) for x in range(f)])
-        self.assertRaises(IndexError, i.add_item, 1, [random.gauss(0, 1) for x in range(f+1000)])
+        i.add_item(0, [random.gauss(0, 1) for _ in range(f)])
+        self.assertRaises(
+            IndexError,
+            i.add_item,
+            1,
+            [random.gauss(0, 1) for _ in range(f + 1000)],
+        )
+
         self.assertRaises(IndexError, i.add_item, 2, [])
 
         i.build(n_trees)
@@ -50,8 +56,11 @@ class TypesTest(TestCase):
         f = 10
         i = AnnoyIndex(f, 'euclidean')
         for j in range(n_points):
-            i.add_item(j, [random.gauss(0, 1) for x in range(f)])
-        self.assertRaises(IndexError, i.add_item, -1, [random.gauss(0, 1) for x in range(f)])
+            i.add_item(j, [random.gauss(0, 1) for _ in range(f)])
+        self.assertRaises(
+            IndexError, i.add_item, -1, [random.gauss(0, 1) for _ in range(f)]
+        )
+
         i.build(n_trees)
         for bad_index in [-1000, -1, n_points, n_points + 1000]:
             self.assertRaises(IndexError, i.get_distance, 0, bad_index)

@@ -12,9 +12,7 @@ n, f = 100000, 40
 
 t = AnnoyIndex(f, 'angular')
 for i in xrange(n):
-    v = []
-    for z in xrange(f):
-        v.append(random.gauss(0, 1))
+    v = [random.gauss(0, 1) for _ in xrange(f)]
     t.add_item(i, v)
 
 t.build(2 * f)
@@ -28,13 +26,13 @@ time_sum = {}
 
 for i in xrange(prec_n):
     j = random.randrange(0, n)
-        
+
     closest = set(t.get_nns_by_item(j, k, n))
     for limit in limits:
         t0 = time.time()
         toplist = t.get_nns_by_item(j, k, limit)
         T = time.time() - t0
-            
+
         found = len(closest.intersection(toplist))
         hitrate = 1.0 * found / k
         prec_sum[limit] = prec_sum.get(limit, 0.0) + hitrate
